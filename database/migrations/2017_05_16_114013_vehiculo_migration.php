@@ -20,7 +20,7 @@ class VehiculoMigration extends Migration {
 			$table->integer('potencia');
 			$table->float('peso');
 			$table->integer('fabricante_id')->unsigned();
-			$table->foreing('fabricante_id')->references('id')->on('fabricantes');
+			$table->foreign('fabricante_id')->references('id')->on('fabricantes');
 			$table->timestamps();
 		});
 	}
