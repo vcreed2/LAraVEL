@@ -11,11 +11,4 @@
 |
 */
 
-Route::get('/', 'MiControlador@index');
-
-Route::get('home', 'HomeController@index');
-
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
+Route::resource('vehiculos','VehiculoController');
