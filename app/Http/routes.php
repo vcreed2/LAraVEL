@@ -11,4 +11,12 @@
 |
 */
 
-Route::resource('vehiculos','VehiculoController');
+
+/*
+
+Route::get('/','VehiculoController@showAll');
+
+*/
+Route::resource('fabricantes','FabricanteController');
+Route::resource('vehiculos','VehiculoController',['only'=>['index','show']]);
+Route::resource('fabricantes.vehiculos','FabricanteVehiculoController',['except'=>['show']]);
