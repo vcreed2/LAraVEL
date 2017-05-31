@@ -2,7 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\vehiculo;
 use Illuminate\Http\Request;
 
 class VehiculoController extends Controller {
@@ -12,9 +12,17 @@ class VehiculoController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index($id)
+	public function index()
 	{
-		return "mostrando los vehiculos que pertenecen al fabricante"."$id";
+		return response()->json(['datos'=>Vehiculo::all()],200); 
+
+		/*
+		$vehiculo=Vehiculo::all();
+		if(!$vehiculo){
+			return response()->json(['mensaje'=>'Fabricante no Existe','codigo'=>404],404);
+		}
+		return response()->json(['datos'=>$vehiculo],200);
+		*/
 	}
 
 	/**
@@ -22,14 +30,9 @@ class VehiculoController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create($id)
+	public function create()
 	{
-		return "mostrando formulario veh para crear vehiculos que pertenecen al fabricante"."$id";
-	}
-
-	public function showAll()
-	{
-		return "mostrando todos los vehiculos";
+		//
 	}
 
 	/**
@@ -48,9 +51,13 @@ class VehiculoController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($idFabricante, $idVehiculo)
+	public function show($id)
 	{
-		return "mostrando formulario para mostrar vehiculo".$idVehiculo. "que pertenece al fabricante".$idFabricante;
+		$vehiculo=Vehiculo::find($id);
+		if(!$vehiculo){
+			return response()->json(['mensaje'=>'Vehiculo no Existe','codigo'=>404],404);
+		}
+		return response()->json(['datos'=>$vehiculo],200);
 	}
 
 	/**
@@ -59,9 +66,9 @@ class VehiculoController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($idFabricante, $idVehiculo)
+	public function edit($id)
 	{
-		return "mostrando formulario para editar vehiculo".$idVehiculo. "que pertenece al fabricante".$idFabricante;
+		//
 	}
 
 	/**
@@ -72,7 +79,7 @@ class VehiculoController extends Controller {
 	 */
 	public function update($id)
 	{
-		return "mostrando formulario para actualizar vehiculo".$idVehiculo. "que pertenece al fabricante".$idFabricante;
+		//
 	}
 
 	/**
@@ -83,7 +90,7 @@ class VehiculoController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		return "mostrando formulario para eliminar vehiculo".$idVehiculo. "que pertenece al fabricante".$idFabricante;
+		//
 	}
 
 }

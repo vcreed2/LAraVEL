@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Fabricante;
+use App\Vehiculo;
 use Illuminate\Http\Request;
 
 class FabricanteVehiculoController extends Controller {
@@ -53,10 +54,26 @@ class FabricanteVehiculoController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request,$id)
 	{
-		//
+		if(!$request->get('color') || !$request->get('cilindraje') || !$request->get('peso') || !$request->get('fabricante_id') || !$request->get('potencia'){
+			return response()->json(['mensaje'=>'Datos Invalidos o incompletos','codigo'=>'455'],404);
+		}
+		$fabricante=Fabricante::find($id);
+		if (!$fabricante){
+		return response()->json(['mensaje'=>'El Fabricante no existe','codigo'=>404],404);
 	}
+	Vehiculo::create([
+		'color'=>$request->get('color'),
+		'cilindraje'=>$request->get('cilindraje'),
+		'peso'=>$request->get('peso'),
+		'potencia'=>$request->get('potencia'),
+		'fabricante_id'=>$id
+		]);
+	return response()->json(['mensaje'=>'El vehiculo se ha insertado correctamente','codigo'=>201],201);
+	}
+
+
 
 	/**
 	 * Display the specified resource.
@@ -86,9 +103,63 @@ class FabricanteVehiculoController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Request $recuest,$idFabricante, $idVehiculo)
 	{
-		return "mostrando formulario para actualizar vehiculo".$idVehiculo. "que pertenece al fabricante".$idFabricante;
+		$metodo=$recuest->method();
+		$fabricante::Fabricante::find($idFabricante);
+		if (!$fabricante){
+			return response()->json(['mensaje'=>'No se encuentra el fabricante','codigo'=>404],404);
+		}
+
+		$vehiculo=$fabricante->vehiculos()->find($idVehiculo);
+		if (!$vehiculo){
+			return response()->json(['mensaje'=>'No se encuentra el vehiculo','codigo'=>404],404);
+
+			$color=$request->get('color');
+			$potencia=$request->get('potencia');
+			$cilindraje=$request->get('cilindraje');
+			$peso=$request->get('peso');
+
+			$flag=false;
+
+		if($metodo==="PATCH") {
+			
+			if ($color!=null && $color!=''){
+				$vehiculo->color=$color;
+				$flag=true;
+			}
+
+			if ($potencia!=null && $potencia!=''){
+				$vehiculo->potencia=$potencia;
+				$flag=true;
+			}
+
+			if ($cilindraje!=null && $cilindraje!=''){
+				$vehiculo->cilindraje=$cilindraje;
+				$flag=true;
+			}
+
+			if ($peso!=null && $peso!=''){
+				$vehiculo->peso=$peso;
+				$flag=true;
+			}
+
+			if ($flag){
+			$vehiculos->save();
+			return "El vehiculo ha sido editado";
+		}
+		return response()->json(['mensaje'=>'no se han guardado los cambios','codigo'=>202],202);
+		}
+
+		if (!$color || !$potencia || !$cilindraje || !$peso){
+			return response()->json(['mensaje'=>'Datos Invalidos','codigo'=>404],404);
+		}
+		$vehiculo->color=$color;
+        $vehiculo->potencia=$potencia;
+        $vehiculo->cilindraje=$cilindraje;
+        $vehiculo->peso=$peso;
+		$fabricante->save();
+		return "el vehiculo ha sido editado";
 	}
 
 	/**
@@ -97,9 +168,19 @@ class FabricanteVehiculoController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($idFabricante, $idVehiculo)
 	{
-		return "mostrando formulario para eliminar vehiculo".$idVehiculo. "que pertenece al fabricante".$idFabricante;
+		$fabricante=Fabricante::find($idFabricante);
+		if(!$fabricante){
+			return response()->json(['mensaje'=>'no existe fabricante','codigo'=>404],404);
+		}
+		$vehiculo=Fabricante->vehiculos()->find($idVehiculo);
+		$vehiculo=Vehiculo::find($idVehiculo);
+		if(!$vehiculo){
+			return response()->json(['mensaje'=>'no existe vehiculo','codigo'=>404],404);
+		}
+		$vehiculo->delete();
+		return response()->json(['mensaje'=>'el vehiculo ha sido eliminado','codigo'=>202],202);
 	}
 
 }
